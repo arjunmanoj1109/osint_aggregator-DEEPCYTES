@@ -1,0 +1,200 @@
+{
+  "identifiers": {
+    "username": "arjunzoffside",
+    "email": "am2754172@gmail.com",
+    "phone": "+91 8369947936",
+    "facebook_url": "https://www.facebook.com/share/1Bk1bjtbeA/",
+    "domain": null,
+    "file": null
+  },
+  "generated_at": "2026-08-03T07:07:17.187487+00:00",
+  "results": [
+    {
+      "tool": "sherlock",
+      "identifier": "arjunzoffside",
+      "success": true,
+      "data": {
+        "found_count": 7,
+        "profiles": {
+          "AllMyLinks": "https://allmylinks.com/arjunzoffside",
+          "AniWorld": "https://aniworld.to/user/profil/arjunzoffside",
+          "Snapchat": "https://www.snapchat.com/add/arjunzoffside",
+          "Velomania": "https://forum.velomania.ru/member.php?username=arjunzoffside",
+          "mastodon.cloud": "https://mastodon.cloud/@arjunzoffside",
+          "threads": "https://www.threads.net/@arjunzoffside",
+          "BabyRu": "https://www.baby.ru/u/arjunzoffside"
+        }
+      },
+      "error": null,
+      "duration_seconds": 31.885663270950317
+    },
+    {
+      "tool": "breach_directory",
+      "identifier": "am2754172@gmail.com",
+      "success": false,
+      "data": {},
+      "error": "API returned HTTP 429: {\"message\":\"You have exceeded the MONTHLY quota for Requests on your current plan, BASIC. Upgrade your plan at https:\\/\\/rapidapi.com\\/rohan-patra\\/api\\/breachdirectory\"}",
+      "duration_seconds": 0.47800278663635254
+    },
+    {
+      "tool": "maigret",
+      "identifier": "arjunzoffside",
+      "success": true,
+      "data": {
+        "found_count": 9,
+        "profiles": {
+          "Using sites database": "C:\\Users\\am275/.maigret\\data.json (3221 sites)",
+          "Instagram": "https://www.instagram.com/arjunzoffside/",
+          "Threads": "https://www.threads.com/@arjunzoffside",
+          "Snapchat": "https://www.snapchat.com/add/arjunzoffside",
+          "ReverbNation": "https://www.reverbnation.com/arjunzoffside",
+          "Instapaper": "https://www.instapaper.com/p/arjunzoffside",
+          "Tinkoff Invest": "https://www.tbank.ru/invest/social/profile/arjunzoffside/",
+          "mastodon.cloud": "https://mastodon.cloud/@arjunzoffside",
+          "Chatujme.cz": "https://profil.chatujme.cz/arjunzoffside"
+        }
+      },
+      "error": null,
+      "duration_seconds": 23.040921211242676
+    },
+    {
+      "tool": "whatsmyname",
+      "identifier": "arjunzoffside",
+      "success": true,
+      "data": {
+        "found_count": 1,
+        "sites_checked": 720,
+        "profiles": [
+          {
+            "name": "thegatewaypundit",
+            "url": "https://www.thegatewaypundit.com/author/arjunzoffside/",
+            "category": "political"
+          }
+        ]
+      },
+      "error": null,
+      "duration_seconds": 60.48349595069885
+    },
+    {
+      "tool": "holehe",
+      "identifier": "am2754172@gmail.com",
+      "success": false,
+      "data": {
+        "registered_count": 0,
+        "registered_services": []
+      },
+      "error": "Exit code 2: usage: holehe [-h] [--only-used] [--no-color] [--no-clear] [-NP] [-C]\n              [-T TIMEOUT]\n              EMAIL [EMAIL ...]\nholehe: error: unrecognized arguments: C:\\Users\\am275\\AppData\\Local\\Temp\\tmp1w7dlf6c\\holehe_out.csv\n",
+      "duration_seconds": 1.0882549285888672
+    },
+    {
+      "tool": "ignorant",
+      "identifier": "+91 8369947936",
+      "success": true,
+      "data": {
+        "country_code": "91",
+        "number": "8369947936",
+        "registered_count": 1,
+        "registered_services": [
+          "instagram.com"
+        ],
+        "failed_or_rate_limited": [
+          "snapchat.com"
+        ]
+      },
+      "error": null,
+      "duration_seconds": 2.4509456157684326
+    },
+    {
+      "tool": "instaloader",
+      "identifier": "arjunzoffside",
+      "success": false,
+      "data": {},
+      "error": "JSON Query to api/v1/users/web_profile_info/: 429 Too Many Requests when accessing https://www.instagram.com/api/v1/users/web_profile_info/?username=arjunzoffside",
+      "duration_seconds": 0.5711095333099365
+    },
+    {
+      "tool": "lookup_id",
+      "identifier": "https://www.facebook.com/share/1Bk1bjtbeA/",
+      "success": false,
+      "data": {},
+      "error": "HTTP request failed: 520 Server Error: <none> for url: https://lookup-id.com/",
+      "duration_seconds": 5.455665111541748
+    },
+    {
+      "tool": "google_dorking",
+      "identifier": "am2754172@gmail.com",
+      "success": true,
+      "data": {
+        "query_count": 7,
+        "queries": [
+          {
+            "label": "site_search",
+            "query": "site:linkedin.com \"am2754172@gmail.com\"",
+            "url": "https://www.google.com/search?q=site%3Alinkedin.com%20%22am2754172%40gmail.com%22"
+          },
+          {
+            "label": "filetype_pdf",
+            "query": "\"am2754172@gmail.com\" filetype:pdf",
+            "url": "https://www.google.com/search?q=%22am2754172%40gmail.com%22%20filetype%3Apdf"
+          },
+          {
+            "label": "filetype_docx",
+            "query": "\"am2754172@gmail.com\" filetype:docx OR filetype:xlsx",
+            "url": "https://www.google.com/search?q=%22am2754172%40gmail.com%22%20filetype%3Adocx%20OR%20filetype%3Axlsx"
+          },
+          {
+            "label": "intitle_profile",
+            "query": "intitle:\"am2754172@gmail.com\" (profile OR bio OR about)",
+            "url": "https://www.google.com/search?q=intitle%3A%22am2754172%40gmail.com%22%20%28profile%20OR%20bio%20OR%20about%29"
+          },
+          {
+            "label": "exposed_config",
+            "query": "\"am2754172@gmail.com\" (intitle:\"index of\" OR filetype:env OR filetype:log)",
+            "url": "https://www.google.com/search?q=%22am2754172%40gmail.com%22%20%28intitle%3A%22index%20of%22%20OR%20filetype%3Aenv%20OR%20filetype%3Alog%29"
+          },
+          {
+            "label": "pastebin_mentions",
+            "query": "\"am2754172@gmail.com\" site:pastebin.com",
+            "url": "https://www.google.com/search?q=%22am2754172%40gmail.com%22%20site%3Apastebin.com"
+          },
+          {
+            "label": "social_mentions",
+            "query": "\"am2754172@gmail.com\" (site:twitter.com OR site:x.com OR site:facebook.com OR site:instagram.com)",
+            "url": "https://www.google.com/search?q=%22am2754172%40gmail.com%22%20%28site%3Atwitter.com%20OR%20site%3Ax.com%20OR%20site%3Afacebook.com%20OR%20site%3Ainstagram.com%29"
+          }
+        ]
+      },
+      "error": null,
+      "duration_seconds": 0.001001119613647461
+    },
+    {
+      "tool": "wayback_machine",
+      "identifier": "arjunzoffside",
+      "success": true,
+      "data": {
+        "snapshot_count": 0,
+        "snapshots": []
+      },
+      "error": null,
+      "duration_seconds": 7.032987833023071
+    },
+    {
+      "tool": "theharvester",
+      "identifier": "google.com",
+      "success": true,
+      "data": {
+        "raw_output": "Read proxies.yaml from C:\\Users\\am275\\.theHarvester\\proxies.yaml"
+      },
+      "error": null,
+      "duration_seconds": 1.4340264797210693
+    },
+    {
+      "tool": "exiftool",
+      "identifier": "\"C:\\Users\\am275\\Pictures\\Screenshots\\Screenshot 2026-08-02 232709.png\"",
+      "success": false,
+      "data": {},
+      "error": "File not found: \"C:\\Users\\am275\\Pictures\\Screenshots\\Screenshot 2026-08-02 232709.png\"",
+      "duration_seconds": 0.0
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "identifiers": {
+    "username": null,
+    "email": null,
+    "phone": "+91 8369947936",
+    "facebook_url": null,
+    "domain": "google.com",
+    "file": null
+  },
+  "generated_at": "2026-08-06T16:16:58.962527+00:00",
+  "results": [
+    {
+      "tool": "phonenumbers",
+      "identifier": "+91 8369947936",
+      "success": true,
+      "data": {
+        "valid": true,
+        "format_international": "+91 83699 47936",
+        "format_national": "083699 47936",
+        "format_e164": "+918369947936",
+        "country_code": 91,
+        "national_number": 8369947936,
+        "number_type": "MOBILE",
+        "location": "India",
+        "carrier": "Reliance Jio",
+        "timezones": [
+          "Asia/Calcutta"
+        ]
+      },
+      "error": null,
+      "duration_seconds": 0.3000671863555908
+    },
+    {
+      "tool": "ip_api",
+      "identifier": "google.com",
+      "success": true,
+      "data": {
+        "status": "success",
+        "country": "United States",
+        "countryCode": "US",
+        "region": "CA",
+        "regionName": "California",
+        "city": "Mountain View",
+        "zip": "94043",
+        "lat": 37.4225,
+        "lon": -122.085,
+        "timezone": "America/Los_Angeles",
+        "isp": "Google LLC",
+        "org": "Google LLC",
+        "as": "AS15169 Google LLC",
+        "query": "172.253.134.100"
+      },
+      "error": null,
+      "duration_seconds": 0.30377840995788574
+    }
+  ]
+}
