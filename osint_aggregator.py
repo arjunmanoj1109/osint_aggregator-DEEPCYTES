@@ -116,31 +116,51 @@ def main():
 
     is_interactive = sys.stdin.isatty()
 
-    # Prompt user for Username if not provided via CLI and in interactive terminal
     username = args.username
-    if not username and is_interactive:
-        if not (args.email or args.phone or args.domain or args.facebook_url or args.file):
-            username = input("[?] Enter Target Username (or press Enter to skip): ").strip()
-            if not username:
-                username = None
-
-    # Prompt user for Email if not provided via CLI and in interactive terminal
     email = args.email
-    if not email and is_interactive:
-        email_input = input("[?] Enter Target Email (Optional, press Enter to skip): ").strip()
-        email = email_input if email_input else None
-
-    # Prompt user for Phone if not provided via CLI and in interactive terminal
     phone = args.phone
-    if not phone and is_interactive and not args.skip_ignorant:
-        phone_input = input("[?] Enter Target Phone Number (Optional, e.g. +33 644637111 or press Enter to skip): ").strip()
-        phone = phone_input if phone_input else None
-
-    # Prompt user for Facebook URL if not provided via CLI and in interactive terminal
     facebook_url = args.facebook_url
-    if not facebook_url and is_interactive and not args.skip_lookup_id:
-        fb_input = input("[?] Enter Target Facebook URL (Optional, press Enter to skip): ").strip()
-        facebook_url = fb_input if fb_input else None
+    discord_id = args.discord_id
+    domain = args.domain
+    image_file = args.file
+
+    # Prompt for all targets at the beginning if no CLI target flags were supplied
+    has_cli_targets = any([
+        username, email, phone, facebook_url, discord_id, domain, image_file
+    ])
+
+    if not has_cli_targets and is_interactive:
+        print("[*] Interactive Mode: Enter target details below (Press Enter to skip any input)\n")
+        
+        username_input = input("[?] Enter Target Username: ").strip()
+        if username_input:
+            username = username_input
+            
+        email_input = input("[?] Enter Target Email: ").strip()
+        if email_input:
+            email = email_input
+            
+        phone_input = input("[?] Enter Target Phone Number (e.g. +91 8369947936): ").strip()
+        if phone_input:
+            phone = phone_input
+            
+        fb_input = input("[?] Enter Target Facebook URL: ").strip()
+        if fb_input:
+            facebook_url = fb_input
+            
+        discord_input = input("[?] Enter Target Discord Snowflake ID: ").strip()
+        if discord_input:
+            discord_id = discord_input
+            
+        domain_input = input("[?] Enter Target Domain or IP (e.g. google.com): ").strip()
+        if domain_input:
+            domain = domain_input
+            
+        file_input = input("[?] Enter Local Image File Path for metadata check: ").strip()
+        if file_input:
+            image_file = file_input
+            
+        print("\n" + "-"*55 + "\n")
 
     report = Report(
         identifiers={
@@ -148,13 +168,13 @@ def main():
             "email": email,
             "phone": phone,
             "facebook_url": facebook_url,
-            "domain": args.domain,
-            "file": args.file,
+            "domain": domain,
+            "file": image_file,
         },
         generated_at=datetime.now(timezone.utc).isoformat()
     )
 
-    target_desc = username or email or phone or facebook_url or args.domain or args.file or "all-targets"
+    target_desc = username or email or phone or facebook_url or domain or image_file or "all-targets"
     print(f"\n[*] Starting Execution Pipeline for target: '{target_desc}'")
 
     # 1. Sherlock (requires username)
@@ -238,12 +258,8 @@ def main():
             print_result_to_terminal(res_gh_dorks)
 
     # Discord Snowflake Decoding
-    discord_snowflake_target = args.discord_id
-    if not discord_snowflake_target and username and username.isdigit() and len(username) >= 17 and len(username) <= 20:
-        discord_snowflake_target = username
-        print(f"[*] Auto-detected username '{username}' as a Discord Snowflake ID.")
-
-    if discord_snowflake_target:
+    discord_snowflake_target = discord_id or username
+    if discord_snowflake_target and discord_snowflake_target.isdigit():
         if not args.skip_discord_snowflake:
             print(f"\n[*] Decoding Discord Snowflake ID ('{discord_snowflake_target}') ...")
             res_discord = run_discord_snowflake(discord_snowflake_target)
@@ -340,7 +356,7 @@ def main():
 
     # Wayback Machine
     if not args.skip_wayback:
-        wayback_target = args.domain or username or facebook_url
+        wayback_target = domain or username or facebook_url
         if wayback_target:
             print(f"\n[*] Executing Wayback Machine ('{wayback_target}') ...")
             res_wayback = run_wayback(wayback_target, timeout=args.timeout)
@@ -350,10 +366,7 @@ def main():
             print("\n[!] No domain or username available for Wayback Machine.")
 
     # Domain / IP specific scans (theHarvester, ip-api, maxmind_geolite)
-    target_domain = args.domain
-    if not target_domain and is_interactive and not (args.skip_theharvester and args.skip_ipapi):
-        domain_input = input("[?] Enter Target Domain or IP Address (Optional, press Enter to skip): ").strip()
-        target_domain = domain_input if domain_input else None
+    target_domain = domain
 
     if target_domain:
         # theHarvester
@@ -405,11 +418,7 @@ def main():
             print("\n[!] No domain or IP provided. Skipping MaxMind GeoLite2.")
 
     # File Specific Scans (ExifTool, Exifread, Pillow)
-    file_path = args.file
-    if not file_path and is_interactive:
-        if not (args.skip_exiftool and args.skip_exifread and args.skip_pillow):
-            file_input = input("[?] Enter local file path for image metadata extraction (Optional, press Enter to skip): ").strip()
-            file_path = file_input if file_input else None
+    file_path = image_file
 
     extracted_latitude = None
     extracted_longitude = None
@@ -461,6 +470,60 @@ def main():
             res_geopy = run_geopy_reverse(extracted_latitude, extracted_longitude)
             report.results.append(res_geopy)
             print_result_to_terminal(res_geopy)
+
+    # --------------------------------------------------------------------------
+    # OSINT Pivoting Engine (Stage 2)
+    # --------------------------------------------------------------------------
+    discovered_emails = set()
+    for res in report.results:
+        if res.success and res.data:
+            if res.tool == "github":
+                git_email = res.data.get("email")
+                if git_email:
+                    discovered_emails.add(git_email.strip().lower())
+
+    initial_emails = set()
+    if email:
+        initial_emails.add(email.strip().lower())
+
+    new_emails_to_pivot = discovered_emails - initial_emails
+
+    if new_emails_to_pivot:
+        print("\n" + "="*55)
+        print(f"[*] PIVOT ENGINE: Discovered {len(new_emails_to_pivot)} new email target(s):")
+        print("="*55)
+        for p_email in sorted(new_emails_to_pivot):
+            print(f"[*] Pivoting on discovered email target: '{p_email}'")
+            
+            if not args.skip_holehe:
+                print(f"\n[*] Executing Holehe ('{p_email}') ...")
+                res_holehe_p = run_holehe(p_email, timeout=args.timeout)
+                report.results.append(res_holehe_p)
+                print_result_to_terminal(res_holehe_p)
+                
+            if not args.skip_ghunt:
+                print(f"\n[*] Executing GHunt ('{p_email}') ...")
+                res_ghunt_p = run_ghunt(p_email, timeout=args.timeout)
+                report.results.append(res_ghunt_p)
+                print_result_to_terminal(res_ghunt_p)
+                
+            if not args.skip_hudsonrock:
+                print(f"\n[*] Executing Hudson Rock Stealer Logs Search ('{p_email}') ...")
+                res_hr_email_p = run_hudsonrock_email(p_email, timeout=args.timeout)
+                report.results.append(res_hr_email_p)
+                print_result_to_terminal(res_hr_email_p)
+                
+            if not args.skip_h8mail:
+                print(f"\n[*] Executing h8mail ('{p_email}') ...")
+                res_h8mail_p = run_h8mail(p_email, timeout=args.timeout)
+                report.results.append(res_h8mail_p)
+                print_result_to_terminal(res_h8mail_p)
+
+            if not args.skip_socialscan:
+                print(f"\n[*] Executing Socialscan Email Lookup ('{p_email}') ...")
+                res_social_email_p = run_socialscan(p_email)
+                report.results.append(res_social_email_p)
+                print_result_to_terminal(res_social_email_p)
 
     # Post-Scan IP Discovery & Geolocation Correlation Engine
     discovered_ips = set()
@@ -545,42 +608,22 @@ def main():
     print("                 SCAN COMPLETE                    ")
     print("="*55)
 
-    # Print raw JSON directly to Terminal
-    if is_interactive:
-        try:
-            show_json = input("\n[?] Print full Raw JSON report to terminal? (y/n) [default: y]: ").strip().lower()
-            if show_json in ['', 'y', 'yes']:
-                print("\n--- RAW JSON REPORT START ---")
-                print(output_json)
-                print("--- RAW JSON REPORT END ---\n")
-        except KeyboardInterrupt:
-            pass
-
-    # Save to JSON File
+    # Save to JSON File (Automatically resolved without prompt)
     output_path = args.output
-    if not output_path and is_interactive:
-        try:
-            save_prompt = input("[?] Save this report to a JSON file? (y/n) [default: y]: ").strip().lower()
-            if save_prompt in ['', 'y', 'yes']:
-                file_name = input("[?] Enter output filename (Press Enter for default): ").strip()
-                if not file_name:
-                    target_slug = str(username or email or phone or "osint")
-                    target_slug = "".join(c for c in target_slug if c.isalnum() or c in ('@', '.', '_', '-'))
-                    file_name = f"osint_report_{target_slug}_{int(time.time())}.json"
-                output_path = file_name
-        except KeyboardInterrupt:
-            print("\n[!] Exiting without saving file.")
+    if not output_path:
+        target_slug = str(username or email or phone or "osint")
+        target_slug = "".join(c for c in target_slug if c.isalnum() or c in ('@', '.', '_', '-'))
+        output_path = f"osint_report_{target_slug}_{int(time.time())}.json"
 
-    if output_path:
-        reports_dir = Path("reports")
-        reports_dir.mkdir(exist_ok=True)
+    reports_dir = Path("reports")
+    reports_dir.mkdir(exist_ok=True)
+    
+    target_path = Path(output_path)
+    if not target_path.is_absolute():
+        target_path = reports_dir / target_path.name
         
-        target_path = Path(output_path)
-        if not target_path.is_absolute():
-            target_path = reports_dir / target_path.name
-            
-        target_path.write_text(output_json, encoding="utf-8")
-        print(f"\n[+] File saved successfully: {target_path}")
+    target_path.write_text(output_json, encoding="utf-8")
+    print(f"\n[+] File saved successfully: {target_path}")
 
 
 if __name__ == "__main__":

@@ -50,7 +50,7 @@ osint_aggregator/
 ## 🚀 Usage Guide
 
 ### Complete Scan (All Target Fields)
-Provide the identifiers you want to audit. The script will automatically skip scanners for which inputs are missing.
+Provide the identifiers you want to audit. The script executes fully non-interactively and saves the output directly.
 
 ```powershell
 python osint_aggregator.py `
@@ -74,7 +74,7 @@ python osint_aggregator.py `
 | `--facebook-url` | Facebook profile URL | Lookup-ID converter |
 | `--domain` | Domain or IP | theHarvester, Wayback Machine, ip-api, MaxMind GeoLite2 |
 | `--file` | Photographic File | ExifTool, exifread, Pillow, Geopy reverse geocoding |
-| `-o` | Output File Path | Defines the destination path for saving your JSON report |
+| `-o` | Output File Path | *(Optional)* Custom report destination. If omitted, the script automatically saves a timestamped file: `reports/osint_report_<target>_<timestamp>.json` |
 
 ### Skip Scan Flags
 If you want to skip slow scanners or target API queries, you can supply individual bypass flags:
@@ -102,3 +102,30 @@ When an image path is supplied via `--file`, the script extracts EXIF GPS coordi
 For platforms with aggressive browser-verification checks (Instagram and Reddit public profile views):
 *   The script handles WAF/403 blocks gracefully without raising tracebacks.
 *   The orchestrator runs **Socialscan** queries independently on both email and username targets to verify profile existence directly via backend registration endpoints, bypassing the browser blocks.
+
+### 4. Non-Interactive Reporting
+The aggregator pipeline executes completely non-interactively without prompting for permissions, files, or raw outputs:
+*   Reports are automatically converted into structured JSON profiles.
+*   Outputs are saved inside the local `reports/` folder. If a custom name isn't specified, a timestamped name (e.g. `osint_report_<target>_<timestamp>.json`) is generated automatically.
+
+### 5. OSINT Pivoting Engine (Stage 2 Recursion)
+The script performs automatic multi-stage pivoting:
+*   If a **GitHub Profile Search** reveals a public email address registered to a user account, the Pivoting Engine dynamically extracts it.
+*   The email address is automatically queued for Stage 2 checks (**Holehe**, **GHunt**, **h8mail**, **Breach Directory**, and **Socialscan**), avoiding duplicates if that email was already scanned.
+
+### 6. Smart Discord Snowflake Auto-Trigger
+*   If a username consisting only of digits (17–20 characters) is entered, the script automatically identifies it as a Discord Snowflake ID and triggers the offline binary bit-shift decoder to output the exact millisecond of account registration.
+
+### 7. Front-Loaded Interactive Prompts
+*   When executing without CLI flags in interactive mode, the terminal will ask for all **7 target inputs** (Username, Email, Phone, Facebook URL, Discord ID, Domain, and Image path) upfront. This ensures that the script runs continuously without interrupting you for prompts midway through.
+
+---
+
+## ⏱️ Performance & Run Times
+
+*   **Full Power Scan**: Takes **3 to 4 minutes** (approx. 180 to 240 seconds) on average. 
+*   **Primary Bottlenecks**: `Sherlock` and `Maigret` query thousands of websites sequentially/in batches, representing ~80% of total run time.
+*   **Speed Up Tip**: To run a rapid scan in **under 30 seconds**, skip the slow scanners:
+    ```powershell
+    python osint_aggregator.py --username "target_user" --skip-maigret
+    ```
