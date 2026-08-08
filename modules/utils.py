@@ -170,3 +170,55 @@ def print_result_to_terminal(result: ToolResult):
         print(f"     - Registered Location: {data.get('location')}")
         print(f"     - Number Type: {data.get('number_type')}")
         print(f"     - Timezones: {', '.join(data.get('timezones', []))}")
+
+    elif result.tool == "picuki":
+        print(f"   Instagram (via Picuki) Profile Details:")
+        print(f"     - Real Name: {data.get('real_name')}")
+        print(f"     - Followers: {data.get('followers')}")
+        print(f"     - Following: {data.get('following')}")
+        print(f"     - Posts Count: {data.get('posts_count')}")
+        print(f"     - Biography: {data.get('biography')}")
+        if data.get('profile_picture'):
+            print(f"     - Avatar URL: {data.get('profile_picture')}")
+
+    elif result.tool == "bluesky":
+        print(f"   Bluesky Actor Profile Details:")
+        print(f"     - Display Name: {data.get('display_name')}")
+        print(f"     - Handle Name: {data.get('handle')}")
+        print(f"     - DID Identifier: {data.get('did')}")
+        print(f"     - Account Created: {data.get('created_at')}")
+        print(f"     - Followers / Follows: {data.get('followers_count')} / {data.get('follows_count')}")
+        print(f"     - Posts Count: {data.get('posts_count')}")
+        print(f"     - Biography: {data.get('description')}")
+
+    elif result.tool == "discord_snowflake":
+        print(f"   Discord Snowflake ID Decoded:")
+        print(f"     - Discord ID: {data.get('snowflake_id')}")
+        print(f"     - Calculated Created UTC: {data.get('creation_date_utc')}")
+
+    elif result.tool == "reddit":
+        print(f"   Reddit Profile Details:")
+        print(f"     - Display Name: {data.get('display_name')}")
+        print(f"     - Created UTC: {data.get('created_at')}")
+        print(f"     - Total Karma (Link / Comment): {data.get('total_karma')} ({data.get('link_karma')} / {data.get('comment_karma')})")
+        print(f"     - Email Verified: {data.get('verified_email')}")
+        print(f"     - Biography: {data.get('biography')}")
+
+    elif result.tool == "github":
+        print(f"   GitHub User Profile Details:")
+        print(f"     - Real Name: {data.get('real_name') or data.get('username')}")
+        print(f"     - Created UTC: {data.get('created_at')}")
+        print(f"     - Public Repositories: {data.get('public_repositories')}")
+        print(f"     - Followers / Following: {data.get('followers')} / {data.get('following')}")
+        if data.get('email'):
+            print(f"     - Public Email: {data.get('email')}")
+        if data.get('location'):
+            print(f"     - Location: {data.get('location')}")
+        if data.get('company'):
+            print(f"     - Company: {data.get('company')}")
+        print(f"     - Biography: {data.get('biography')}")
+
+    elif result.tool == "github_dorking":
+        print(f"   Targeted GitHub Code Leak Dorks ({data.get('query_count', 0)}):")
+        for q in data.get("queries", []):
+            print(f"     - {q.get('label')}: {q.get('url')}")

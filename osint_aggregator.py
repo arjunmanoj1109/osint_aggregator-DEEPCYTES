@@ -38,7 +38,17 @@ from pathlib import Path
 # Import modular package elements
 from modules.models import Report
 from modules.utils import print_result_to_terminal
-from modules.username_scanners import run_sherlock, run_maigret, run_whatsmyname
+from modules.username_scanners import (
+    run_sherlock,
+    run_maigret,
+    run_whatsmyname,
+    run_picuki,
+    run_bluesky,
+    run_discord_snowflake,
+    run_reddit,
+    run_github,
+    run_github_dorking
+)
 from modules.email_scanners import run_holehe, run_ghunt, run_h8mail, run_breach_directory
 from modules.phone_scanners import run_ignorant, run_phonenumbers
 from modules.facebook_scanners import run_lookup_id
@@ -62,6 +72,7 @@ def main():
         description="OSINT Username Digital Footprint Aggregator."
     )
     parser.add_argument("--username", help="Target username handle to search")
+    parser.add_argument("--discord-id", default=None, help="Target Discord Snowflake ID to decode")
     parser.add_argument("--email", default=None, help="Target email address")
     parser.add_argument("--phone", default=None, help="Target phone number (e.g. '+33 644637111' or '33 644637111')")
     parser.add_argument("--facebook-url", default=None, help="Target Facebook Profile/Group URL for Lookup-ID")
@@ -87,6 +98,12 @@ def main():
     parser.add_argument("--skip-geolite", action="store_true", help="Skip MaxMind GeoLite2 Geolocation lookup")
     parser.add_argument("--skip-geopy", action="store_true", help="Skip geopy reverse geocoding lookup")
     parser.add_argument("--skip-phonenumbers", action="store_true", help="Skip phonenumbers telecom info lookup")
+    parser.add_argument("--skip-picuki", action="store_true", help="Skip Picuki Instagram lookup")
+    parser.add_argument("--skip-bluesky", action="store_true", help="Skip Bluesky lookup")
+    parser.add_argument("--skip-discord-snowflake", action="store_true", help="Skip Discord Snowflake decoding")
+    parser.add_argument("--skip-reddit", action="store_true", help="Skip Reddit lookup")
+    parser.add_argument("--skip-github", action="store_true", help="Skip GitHub lookup")
+    parser.add_argument("--skip-github-dorks", action="store_true", help="Skip GitHub search dorks")
     parser.add_argument("--geolite-db", default=None, help="Path to local GeoLite2-City.mmdb database file")
     parser.add_argument("--wmn-max-sites", type=int, default=None, help="Limit WhatsMyName sites")
     parser.add_argument("--timeout", type=int, default=300, help="Execution timeout in seconds")
@@ -188,6 +205,51 @@ def main():
             if not args.skip_hudsonrock:
                 print("\n[!] No username provided. Skipping Hudson Rock Username search.")
 
+    # Username Extra Scans (Picuki, Bluesky, Reddit, GitHub, GitHub Dorks)
+    if username:
+        if not args.skip_picuki:
+            print(f"\n[*] Executing Picuki Instagram lookup ('{username}') ...")
+            res_picuki = run_picuki(username)
+            report.results.append(res_picuki)
+            print_result_to_terminal(res_picuki)
+            
+        if not args.skip_bluesky:
+            print(f"\n[*] Executing Bluesky Profile Resolver ('{username}') ...")
+            res_bsky = run_bluesky(username)
+            report.results.append(res_bsky)
+            print_result_to_terminal(res_bsky)
+            
+        if not args.skip_reddit:
+            print(f"\n[*] Executing Reddit Profile Auditor ('{username}') ...")
+            res_reddit = run_reddit(username)
+            report.results.append(res_reddit)
+            print_result_to_terminal(res_reddit)
+            
+        if not args.skip_github:
+            print(f"\n[*] Executing GitHub Profile Search ('{username}') ...")
+            res_github = run_github(username)
+            report.results.append(res_github)
+            print_result_to_terminal(res_github)
+            
+        if not args.skip_github_dorks:
+            print(f"\n[*] Executing GitHub Code Leak Dorking ('{username}') ...")
+            res_gh_dorks = run_github_dorking(username)
+            report.results.append(res_gh_dorks)
+            print_result_to_terminal(res_gh_dorks)
+
+    # Discord Snowflake Decoding
+    discord_snowflake_target = args.discord_id
+    if not discord_snowflake_target and username and username.isdigit() and len(username) >= 17 and len(username) <= 20:
+        discord_snowflake_target = username
+        print(f"[*] Auto-detected username '{username}' as a Discord Snowflake ID.")
+
+    if discord_snowflake_target:
+        if not args.skip_discord_snowflake:
+            print(f"\n[*] Decoding Discord Snowflake ID ('{discord_snowflake_target}') ...")
+            res_discord = run_discord_snowflake(discord_snowflake_target)
+            report.results.append(res_discord)
+            print_result_to_terminal(res_discord)
+
     # Email Specific Scans (Holehe, GHunt, Hudson Rock Email, h8mail)
     if email:
         if not args.skip_holehe:
@@ -220,14 +282,19 @@ def main():
         if not args.skip_h8mail:
             print("\n[!] No email provided. Skipping h8mail.")
 
-    # Socialscan (Username or Email lookup)
+    # Socialscan (Username and/or Email lookup)
     if not args.skip_socialscan:
-        social_target = email or username
-        if social_target:
-            print(f"\n[*] Executing Socialscan ('{social_target}') ...")
-            res_social = run_socialscan(social_target)
-            report.results.append(res_social)
-            print_result_to_terminal(res_social)
+        if email or username:
+            if email:
+                print(f"\n[*] Executing Socialscan Email Lookup ('{email}') ...")
+                res_social_email = run_socialscan(email)
+                report.results.append(res_social_email)
+                print_result_to_terminal(res_social_email)
+            if username:
+                print(f"\n[*] Executing Socialscan Username Lookup ('{username}') ...")
+                res_social_user = run_socialscan(username)
+                report.results.append(res_social_user)
+                print_result_to_terminal(res_social_user)
         else:
             print("\n[!] No email or username provided. Skipping Socialscan.")
 

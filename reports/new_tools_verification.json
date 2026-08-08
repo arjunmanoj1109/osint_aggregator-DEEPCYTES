@@ -1,0 +1,125 @@
+{
+  "identifiers": {
+    "username": "arjzzn",
+    "email": null,
+    "phone": null,
+    "facebook_url": null,
+    "domain": null,
+    "file": null
+  },
+  "generated_at": "2026-08-08T09:08:02.710158+00:00",
+  "results": [
+    {
+      "tool": "sherlock",
+      "identifier": "arjzzn",
+      "success": true,
+      "data": {
+        "found_count": 7,
+        "profiles": {
+          "AllMyLinks": "https://allmylinks.com/arjzzn",
+          "AniWorld": "https://aniworld.to/user/profil/arjzzn",
+          "Discord": "https://discord.com",
+          "Trakt": "https://www.trakt.tv/users/arjzzn",
+          "Wattpad": "https://www.wattpad.com/user/arjzzn",
+          "mastodon.cloud": "https://mastodon.cloud/@arjzzn",
+          "BabyRu": "https://www.baby.ru/u/arjzzn"
+        }
+      },
+      "error": null,
+      "duration_seconds": 112.08966016769409
+    },
+    {
+      "tool": "picuki",
+      "identifier": "arjzzn",
+      "success": false,
+      "data": {},
+      "error": "403 Client Error: Forbidden for url: https://www.tikvib.com/profile/arjzzn",
+      "duration_seconds": 1.4925041198730469
+    },
+    {
+      "tool": "bluesky",
+      "identifier": "arjzzn",
+      "success": false,
+      "data": {},
+      "error": "HTTPSConnectionPool(host='bsky.social', port=443): Max retries exceeded with url: /xrpc/com.atproto.identity.resolveHandle?handle=arjzzn (Caused by ConnectTimeoutError(<HTTPSConnection(host='bsky.social', port=443) at 0x20164bc3c20>, 'Connection to bsky.social timed out. (connect timeout=10)'))",
+      "duration_seconds": 30.035976886749268
+    },
+    {
+      "tool": "reddit",
+      "identifier": "arjzzn",
+      "success": false,
+      "data": {},
+      "error": "403 Client Error: Blocked for url: https://www.reddit.com/user/arjzzn/about.json",
+      "duration_seconds": 0.7443888187408447
+    },
+    {
+      "tool": "github",
+      "identifier": "arjzzn",
+      "success": false,
+      "data": {},
+      "error": "GitHub user profile not found.",
+      "duration_seconds": 0.4823334217071533
+    },
+    {
+      "tool": "github_dorking",
+      "identifier": "arjzzn",
+      "success": true,
+      "data": {
+        "username": "arjzzn",
+        "query_count": 7,
+        "queries": [
+          {
+            "label": "Exposed JSON config credentials",
+            "query": "extension:json \"arjzzn\"",
+            "url": "https://github.com/search?q=extension%3Ajson+%22arjzzn%22&type=code"
+          },
+          {
+            "label": "Config files containing username",
+            "query": "filename:config \"arjzzn\"",
+            "url": "https://github.com/search?q=filename%3Aconfig+%22arjzzn%22&type=code"
+          },
+          {
+            "label": "YAML details containing username",
+            "query": "extension:yml \"arjzzn\"",
+            "url": "https://github.com/search?q=extension%3Ayml+%22arjzzn%22&type=code"
+          },
+          {
+            "label": "Leaked passwords containing username",
+            "query": "\"arjzzn\" password",
+            "url": "https://github.com/search?q=%22arjzzn%22+password&type=code"
+          },
+          {
+            "label": "Leaked access tokens containing username",
+            "query": "\"arjzzn\" token",
+            "url": "https://github.com/search?q=%22arjzzn%22+token&type=code"
+          },
+          {
+            "label": "Leaked API keys containing username",
+            "query": "\"arjzzn\" key",
+            "url": "https://github.com/search?q=%22arjzzn%22+key&type=code"
+          },
+          {
+            "label": "Linked Gmail address leaks",
+            "query": "\"arjzzn\" @gmail.com",
+            "url": "https://github.com/search?q=%22arjzzn%22+%40gmail.com&type=code"
+          }
+        ]
+      },
+      "error": null,
+      "duration_seconds": 0.0
+    },
+    {
+      "tool": "discord_snowflake",
+      "identifier": "115330633123456789",
+      "success": true,
+      "data": {
+        "snowflake_id": "115330633123456789",
+        "epoch_timestamp_ms": 1447567365676,
+        "creation_date_utc": "2015-11-15 06:02:45.676000 UTC",
+        "creation_iso": "2015-11-15T06:02:45.676000+00:00"
+      },
+      "error": null,
+      "duration_seconds": 0.0
+    }
+  ]
+}
